@@ -13,24 +13,22 @@ const Cube = forwardRef((props, ref)=> {
       }
     };
   }, []);
-  // useFrame(({ clock }) => {
-  //   meshRef.current.rotation.x = clock.getElapsedTime()
-  //   meshRef.current.rotation.y = clock.getElapsedTime()
-  //   meshRef.current.rotation.z = clock.getElapsedTime()
-
-  // })
 
 
-  // return <mesh ref={meshRef}>
-  //         <boxGeometry />
-  //         <meshStandardMaterial color={props.color}/>
-  //       </mesh>
+  useFrame(({ clock }) => {
+    meshRef.current.rotation.x = clock.getElapsedTime()
+    meshRef.current.rotation.y = clock.getElapsedTime()
+    meshRef.current.rotation.z = clock.getElapsedTime()
 
-  return <input 
-            type='text' 
-            style={{border : `2px solid yellow`, width : "200px", height : "50px"}}  
-            ref={meshRef}
-          />
+  })
+
+
+  return <mesh ref={meshRef}>
+          <boxGeometry />
+          <meshStandardMaterial color={props.color}/>
+        </mesh>
+
+
 })
 
   
@@ -47,10 +45,10 @@ function App() {
   }
   return (
     <>
-    {/* <Canvas>
+    <Canvas>
       <directionalLight position={[0, 0, 2]} intensity={0.5}/>
-      <ambientLight  intensity={0.1}/> */}
-      {/* <group position={[0, -1, 0]}>
+      <ambientLight  intensity={0.1}/>
+      <group position={[0, -1, 0]}>
         <Cube 
           position={[1, 0, 0]}
           color={"red"}
@@ -71,20 +69,9 @@ function App() {
           color={"yellow"}
           size={[1, 1, 1]}
         />
-      </group> */}
+      </group>
 
-      {/* <Cube 
-          color={"yellow"}
-          ref={cubeRef}
-      /> */}
-
-    {/* </Canvas> */}
-      <button onClick={() => handleClick}>
-        focus the input
-      </button>
-      <Cube 
-        ref={cubeRef}
-      />
+    </Canvas>
 </>
     
   )
