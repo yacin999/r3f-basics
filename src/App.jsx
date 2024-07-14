@@ -6,14 +6,6 @@ import { forwardRef, useImperativeHandle, useRef } from 'react'
 const Cube = forwardRef((props, ref)=> {
   const meshRef = useRef()
 
-  useImperativeHandle(ref, () => {
-    return {
-      focus() {
-        meshRef.current.focus();
-      }
-    };
-  }, []);
-
 
   useFrame(({ clock }) => {
     meshRef.current.rotation.x = clock.getElapsedTime()
@@ -31,18 +23,11 @@ const Cube = forwardRef((props, ref)=> {
 
 })
 
-  
-
 
 function App() {
 
   const cubeRef = useRef(null)
 
-  const handleClick = () => {
-    if (cubeRef.current) {
-      cubeRef.current.focus(); // Now it should work
-    }
-  }
   return (
     <>
     <Canvas>
