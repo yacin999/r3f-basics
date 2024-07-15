@@ -9,11 +9,12 @@ const Cube = ({position, color, size})=> {
 
   useFrame((state, delta) => {
     // delta is the difference between the current frame and the last frame
-
+    // console.log("state from use frame :", state)
     meshRef.current.rotation.x += (delta * 4)
     meshRef.current.rotation.y += (delta * 4)
     meshRef.current.rotation.z += (delta * 4)
 
+    meshRef.current.position.z = Math.sin(state.clock.elapsedTime) * 2
   })
 
 
