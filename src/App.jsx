@@ -42,14 +42,25 @@ const Torus = ({position, size, color}) => {
   return (
     <mesh position={position}>
       <torusGeometry 
-        size={size}
-        args={[5.5, 0.1, 32, 32]}
+        args={size}
       />
       <meshStandardMaterial color={color}/>
     </mesh>
   )
 }
 
+
+const TorusKnot = ({position, size, color}) => {
+
+  return (
+    <mesh position={position}>
+      <torusKnotGeometry 
+        args={size}
+      />
+      <meshStandardMaterial color={color}/>
+    </mesh>
+  )
+}
 
 function App() {
 
@@ -82,6 +93,13 @@ function App() {
           size={[1, 1, 1]}
         />
       </group> */}
+
+      <Cube 
+        position={[1, 0, 0]}
+        color={"red"}
+        size={[1, 1, 1]}
+      />
+
       <Sphere
         position={[-2, 0, 0]}
         size={[1, 1, 1]}
@@ -89,9 +107,15 @@ function App() {
       />
 
       <Torus
-        position={[2, 0, 0]}
-        size={[1, 1, 1]}
+        position={[4, 0, 0]}
+        size={[0.8, 0.1, 30, 30]}
         color={"green"}
+      />
+
+      <TorusKnot
+        position={[-5, 0, 0]}
+        size={[0.5, 0.1, 1000, 50]}
+        color={"pink"}
       />
     </Canvas>
 </>
