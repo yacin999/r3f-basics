@@ -1,6 +1,8 @@
 import { Canvas, useFrame } from '@react-three/fiber'
-import './App.css'
+import { OrbitControls } from '@react-three/drei'
 import {  useRef } from 'react'
+
+import './App.css'
 
 
 const Cube = ({position, color, size})=> {
@@ -117,6 +119,7 @@ function App() {
         size={[0.5, 0.1, 1000, 50]}
         color={"pink"}
       />
+      <OrbitControls/>
     </Canvas>
 </>
     
