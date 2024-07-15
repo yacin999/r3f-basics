@@ -37,6 +37,20 @@ const Sphere = ({position, size, color}) => {
 }
 
 
+const Torus = ({position, size, color}) => {
+
+  return (
+    <mesh position={position}>
+      <torusGeometry 
+        size={size}
+        args={[5.5, 0.1, 32, 32]}
+      />
+      <meshStandardMaterial color={color}/>
+    </mesh>
+  )
+}
+
+
 function App() {
 
   const cubeRef = useRef(null)
@@ -69,9 +83,15 @@ function App() {
         />
       </group> */}
       <Sphere
-        position={[0, 0, 1]}
+        position={[-2, 0, 0]}
         size={[1, 1, 1]}
         color={"blue"}
+      />
+
+      <Torus
+        position={[2, 0, 0]}
+        size={[1, 1, 1]}
+        color={"green"}
       />
     </Canvas>
 </>
