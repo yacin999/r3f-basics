@@ -1,27 +1,29 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import './App.css'
-import { forwardRef, useImperativeHandle, useRef } from 'react'
+import {  useRef } from 'react'
 
 
-const Cube = forwardRef((props, ref)=> {
+const Cube = ({position, color, size})=> {
   const meshRef = useRef()
 
 
-  useFrame(({ clock }) => {
-    meshRef.current.rotation.x = clock.getElapsedTime()
-    meshRef.current.rotation.y = clock.getElapsedTime()
-    meshRef.current.rotation.z = clock.getElapsedTime()
+  useFrame((state, delta) => {
+    // delta is the difference between the current frame and the last frame
+
+    meshRef.current.rotation.x += (delta * 4)
+    meshRef.current.rotation.y += (delta * 4)
+    meshRef.current.rotation.z += (delta * 4)
 
   })
 
 
-  return <mesh ref={meshRef}>
-          <boxGeometry />
-          <meshStandardMaterial color={props.color}/>
+  return <mesh position={position} ref={meshRef}>
+          <boxGeometry size={size}/>
+          <meshStandardMaterial color={color}/>
         </mesh>
 
 
-})
+}
 
 
 function App() {
