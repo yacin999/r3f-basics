@@ -14,7 +14,7 @@ const Cube = ({position, color, size})=> {
     meshRef.current.rotation.y += (delta * 4)
     meshRef.current.rotation.z += (delta * 4)
 
-    meshRef.current.position.z = Math.sin(state.clock.elapsedTime) * 2
+    meshRef.current.position.z = Math.sin(state.clock.elapsedTime) * 2 
   })
 
 
@@ -24,6 +24,16 @@ const Cube = ({position, color, size})=> {
         </mesh>
 
 
+}
+
+const Sphere = ({position, size, color}) => {
+
+  return (
+    <mesh position={position}>
+      <sphereGeometry size={size}/>
+      <meshStandardMaterial color={color}/>
+    </mesh>
+  )
 }
 
 
@@ -36,7 +46,7 @@ function App() {
     <Canvas>
       <directionalLight position={[0, 0, 2]} intensity={0.5}/>
       <ambientLight  intensity={0.1}/>
-      <group position={[0, -1, 0]}>
+      {/* <group position={[0, -1, 0]}>
         <Cube 
           position={[1, 0, 0]}
           color={"red"}
@@ -57,8 +67,12 @@ function App() {
           color={"yellow"}
           size={[1, 1, 1]}
         />
-      </group>
-
+      </group> */}
+      <Sphere
+        position={[0, 0, 1]}
+        size={[1, 1, 1]}
+        color={"blue"}
+      />
     </Canvas>
 </>
     
