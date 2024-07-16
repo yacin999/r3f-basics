@@ -100,6 +100,7 @@ const Sphere = ({position, size}) => {
         color={springs.color}
         distort={0.5} 
         speed={5}
+        wireframe
       />
     </animated.mesh>
   )
