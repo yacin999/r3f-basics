@@ -1,6 +1,6 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, MeshDistortMaterial } from '@react-three/drei'
-import {  useRef, useState } from 'react'
+import {  useCallback, useRef, useState } from 'react'
 import { animated, useSpring } from '@react-spring/three'
 import './App.css'
 
@@ -32,61 +32,68 @@ const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
 
 const Sphere = ({position, size}) => {
 
-  const [clicked, setClicked] = useState(false)
   const meshRef = useRef()
 
-  const handleClick = () => {
-    console.log('test color : ', clicked)
-    setClicked(s => !s)
-  }
+  const handleClick = useCallback(() => {
+    let clicked = false
+
+    return () => {
+      clicked = !clicked
+      api.start({
+        color: clicked ? '#569AFF' : '#ff6d6d',
+      })
+    }
+  }, [])
   
   const [springs, api] = useSpring(()=> ({
     scale : 1,
     position : position, 
     color : '#ff6d6d',
     config : key => {
+      switch (key) {
+        case "scale" :
+          return {
+            mass : 4,
+            friction : 10
+          }
+        case "position" : 
         return {
           mass : 4,
-          friction : 10
+          friction : 220
         }
-      // switch (key) {
-      //   case "scale" :
-      //     return {
-      //       mass : 4,
-      //       friction : 10
-      //     }
-      //   case "position" : 
-      //   return {
-      //     mass : 4,
-      //     friction : 220
-      //   }
-      //   default : 
-      //   return {}
-      // }
+        default : 
+        return {}
+      }
     }
-  }))
+  }), [])
+
+
+
+
+  useFrame((state, delta) => {
+    meshRef.current.position.y += Math.sin(state.clock.elapsedTime ) / 25
+  })
 
   const handlePointerEnter = () => {
-    console.log("pointer has entered ??")
     api.start({
-      scale : 1.5
+      scale: 1.5,
     })
   }
 
-
   const handlePointerLeave = () => {
-    console.log("pointer has Leaved !!")
     api.start({
-      scale : 1
+      scale: 1,
     })
   }
 
   return (
     <animated.mesh 
+      ref={meshRef}
       position={position} 
-      onClick={handleClick}
+      onClick={handleClick()}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
+      scale={springs.scale}
     >
       <sphereGeometry size={size}/>
       <AnimatedMeshDistortMaterial 
