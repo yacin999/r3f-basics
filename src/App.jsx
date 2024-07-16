@@ -1,7 +1,7 @@
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
-import {  useRef } from 'react'
-
+import { OrbitControls, MeshDistortMaterial } from '@react-three/drei'
+import {  useRef, useState } from 'react'
+import { animated, useSpring } from '@react-spring/three'
 import './App.css'
 
 
@@ -11,7 +11,6 @@ const Cube = ({position, color, size})=> {
 
   useFrame((state, delta) => {
     // delta is the difference between the current frame and the last frame
-    // console.log("state from use frame :", state)
     meshRef.current.rotation.x += (delta * 4)
     meshRef.current.rotation.y += (delta * 4)
     meshRef.current.rotation.z += (delta * 4)
@@ -28,21 +27,92 @@ const Cube = ({position, color, size})=> {
 
 }
 
-const Sphere = ({position, size, color}) => {
+
+const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
+
+const Sphere = ({position, size}) => {
+
+  const [clicked, setClicked] = useState(false)
+  const meshRef = useRef()
+
+  const handleClick = () => {
+    console.log('test color : ', clicked)
+    setClicked(s => !s)
+  }
+  
+  const [springs, api] = useSpring(()=> ({
+    scale : 1,
+    position : position, 
+    color : '#ff6d6d',
+    config : key => {
+        return {
+          mass : 4,
+          friction : 10
+        }
+      // switch (key) {
+      //   case "scale" :
+      //     return {
+      //       mass : 4,
+      //       friction : 10
+      //     }
+      //   case "position" : 
+      //   return {
+      //     mass : 4,
+      //     friction : 220
+      //   }
+      //   default : 
+      //   return {}
+      // }
+    }
+  }))
+
+  const handlePointerEnter = () => {
+    console.log("pointer has entered ??")
+    api.start({
+      scale : 1.5
+    })
+  }
+
+
+  const handlePointerLeave = () => {
+    console.log("pointer has Leaved !!")
+    api.start({
+      scale : 1
+    })
+  }
 
   return (
-    <mesh position={position}>
+    <animated.mesh 
+      position={position} 
+      onClick={handleClick}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+    >
       <sphereGeometry size={size}/>
-      <meshStandardMaterial color={color}/>
-    </mesh>
+      <AnimatedMeshDistortMaterial 
+        color={springs.color}
+        distort={0.5} 
+        speed={5}
+      />
+    </animated.mesh>
   )
 }
 
 
 const Torus = ({position, size, color}) => {
 
+  const meshRef = useRef()
+
+  useFrame((state, delta) => {
+    // delta is the difference between the current frame and the last frame
+    meshRef.current.rotation.z += (delta * 4)
+    meshRef.current.rotation.y += (delta * 4)
+
+  })
+
+
   return (
-    <mesh position={position}>
+    <mesh position={position} ref={meshRef}>
       <torusGeometry 
         args={size}
       />
@@ -54,8 +124,20 @@ const Torus = ({position, size, color}) => {
 
 const TorusKnot = ({position, size, color}) => {
 
+  const meshRef = useRef()
+
+  useFrame((state, delta) => {
+    // delta is the difference between the current frame and the last frame
+    meshRef.current.rotation.x += (delta * 4)
+    meshRef.current.rotation.y += (delta * 4)
+    meshRef.current.rotation.z += (delta * 4)
+
+    meshRef.current.position.y = Math.sin(state.clock.elapsedTime) 
+  })
+
+
   return (
-    <mesh position={position}>
+    <mesh position={position} ref={meshRef}>
       <torusKnotGeometry 
         args={size}
       />
@@ -104,8 +186,7 @@ function App() {
 
       <Sphere
         position={[-2, 0, 0]}
-        size={[1, 1, 1]}
-        color={"blue"}
+        size={[1.5, 64, 32]}
       />
 
       <Torus
