@@ -1,8 +1,11 @@
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, MeshDistortMaterial } from '@react-three/drei'
+import { OrbitControls, MeshDistortMaterial, MeshWobbleMaterial, useHelper } from '@react-three/drei'
 import {  useCallback, useRef, useState } from 'react'
 import { animated, useSpring } from '@react-spring/three'
+import { DirectionalLightHelper } from 'three'
+
 import './App.css'
+import { useControls } from 'leva'
 
 
 const Cube = ({position, color, size})=> {
@@ -136,9 +139,9 @@ const TorusKnot = ({position, size, color}) => {
 
   useFrame((state, delta) => {
     // delta is the difference between the current frame and the last frame
-    meshRef.current.rotation.x += (delta * 4)
-    meshRef.current.rotation.y += (delta * 4)
-    meshRef.current.rotation.z += (delta * 4)
+    // meshRef.current.rotation.x += (delta * 4)
+    // meshRef.current.rotation.y += (delta * 4)
+    // meshRef.current.rotation.z += (delta * 4)
 
     meshRef.current.position.y = Math.sin(state.clock.elapsedTime) 
   })
@@ -149,19 +152,34 @@ const TorusKnot = ({position, size, color}) => {
       <torusKnotGeometry 
         args={size}
       />
-      <meshStandardMaterial color={color}/>
+       <MeshWobbleMaterial 
+        factor={0.6} 
+        speed={10} 
+        color={'purple'}
+      />
     </mesh>
   )
 }
 
-function App() {
 
-  const cubeRef = useRef(null)
+const Scene = () => {
+
+  const directionalLightRef = useRef()
+
+  useHelper(directionalLightRef, DirectionalLightHelper, 0.5, "black")
+  const {lightColor, lightIntesity } = useControls({
+    lightColor : "white"
+  })
 
   return (
     <>
-    <Canvas>
-      <directionalLight position={[0, 0, 2]} intensity={0.5}/>
+      <directionalLight 
+        position={[0, 1, 2]} 
+        intensity={0.5} 
+        ref={directionalLightRef}
+        color={lightColor}
+      />
+
       <ambientLight  intensity={0.1}/>
       {/* <group position={[0, -1, 0]}>
         <Cube 
@@ -209,6 +227,22 @@ function App() {
         color={"pink"}
       />
       <OrbitControls/>
+    </>
+  )
+}
+
+
+
+
+
+function App() {
+
+  const cubeRef = useRef(null)
+
+  return (
+    <>
+    <Canvas>
+      <Scene/>
     </Canvas>
 </>
     
