@@ -137,6 +137,16 @@ const TorusKnot = ({position, size, color}) => {
 
   const meshRef = useRef()
 
+  const {controlColor, radius } = useControls({
+    controlColor : "lightblue", 
+    radius : {
+      value : 5,
+      min : 1,
+      max : 10,
+      step : 0.5
+    }
+  })
+
   useFrame((state, delta) => {
     // delta is the difference between the current frame and the last frame
     // meshRef.current.rotation.x += (delta * 4)
@@ -150,12 +160,12 @@ const TorusKnot = ({position, size, color}) => {
   return (
     <mesh position={position} ref={meshRef}>
       <torusKnotGeometry 
-        args={size}
+        args={[radius, ...size]}
       />
        <MeshWobbleMaterial 
         factor={0.6} 
         speed={10} 
-        color={'purple'}
+        color={controlColor}
       />
     </mesh>
   )
@@ -168,14 +178,20 @@ const Scene = () => {
 
   useHelper(directionalLightRef, DirectionalLightHelper, 0.5, "black")
   const {lightColor, lightIntesity } = useControls({
-    lightColor : "white"
+    lightColor : "white",
+    lightIntesity : {
+      value : 0.5,
+      min : 0, 
+      max : 5
+    }
   })
 
   return (
     <>
       <directionalLight 
         position={[0, 1, 2]} 
-        intensity={0.5} 
+        // intensity={0.5}
+        intensity={lightIntesity} 
         ref={directionalLightRef}
         color={lightColor}
       />
@@ -223,7 +239,7 @@ const Scene = () => {
 
       <TorusKnot
         position={[-5, 0, 0]}
-        size={[0.5, 0.1, 1000, 50]}
+        size={[0.1, 1000, 50]}
         color={"pink"}
       />
       <OrbitControls/>
